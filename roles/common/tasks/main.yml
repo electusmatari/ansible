@@ -1,0 +1,19 @@
+---
+# APT configuration
+
+- name: apt | Install sources.list
+  template: src=sources.list.j2
+            dest=/etc/apt/sources.list
+            owner=root group=root mode=644
+  register: sources_list
+  tags: apt
+
+# NTP configuration
+
+- name: ntp | Install NTP package
+  apt: pkg=ntp state=present update_cache=yes
+  tags: ntp
+
+- name: ntp | Enable NTP service
+  service: name=ntp state=started enabled=yes
+  tags: ntp

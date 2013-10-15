@@ -1,0 +1,6 @@
+#!/bin/sh
+# {{ ansible_managed }}
+GIT_WORK_TREE={{work_tree}} git checkout -f
+{% if post_receive is defined %}
+{{post_receive}}
+{% endif %}

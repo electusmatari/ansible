@@ -1,0 +1,34 @@
+---
+- name: Install git package
+  apt: pkg=git state=present update_cache=yes
+
+- name: Create user {{gituser}}
+  user: name={{gituser}} system=yes
+        shell=/usr/bin/git-shell state=present
+
+- name: Create git repository directory {{repopath}}
+  file: dest={{repopath}}
+        state=directory
+        owner={{gituser}} group={{gituser}} mode=0755
+
+- name: Create git repository {{repopath}}
+  sudo_user: "{{gituser}}"
+  command: git init --bare {{repopath}}
+           creates={{repopath}}/config
+
+- name: Configure git repository {{repopath}}
+  template: src=config.j2
+            dest={{repopath}}/config
+            owner={{gituser}} group={{gituser}} mode=0644
+
+- name: Create detached working directory
+  file: dest={{work_tree}}
+        state=directory
+        owner={{gituser}} group={{gituser}} mode=0755
+  when: work_tree is defined
+
+- name: Configure detached working directory
+  template: src=post-receive.j2
+            dest={{repopath}}/hooks/post-receive
+            owner={{gituser}} group={{gituser}} mode=0755
+  when: work_tree is defined

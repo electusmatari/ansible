@@ -1,0 +1,54 @@
+---
+dependencies:
+- role: webserver
+- role: supervisor
+- role: gitrepo
+  repopath: /srv/emcom/git/electusmatari.com
+  work_tree: /srv/emcom/electusmatari.com
+  gituser: emcom
+  post_receive: |
+    /srv/emcom/venv/bin/pip install -qr /srv/emcom/electusmatari.com/requirements.txt
+    # supervisorctl restart emcom-emapps
+    # supervisorctl restart emcom-emtools
+    # supervisorctl restart emcom-gradient
+- role: gitrepo
+  repopath: /srv/emcom/git/emkillboard
+  work_tree: /srv/emcom/emkillboard
+  gituser: emcom
+- role: gitrepo
+  repopath: /srv/emcom/git/emforums
+  work_tree: /srv/emcom/emforums
+  gituser: emcom
+- role: mediawiki
+  wiki_name: emwiki
+  wiki_dbname: emwiki
+  wiki_dbuser: emwiki
+  wiki_sitename: EMWiki
+  wiki_scriptpath: /mediawiki
+  wiki_articlepath: /wiki
+  wiki_required_forum_name: Internal
+  wiki_logo: http://www.electusmatari.com/media/img/emlogo.png
+  wiki_server: http://www.electusmatari.com
+  wiki_wikipassword: "{{emwiki_password}}"
+- role: mediawiki
+  wiki_name: grdwiki
+  wiki_dbname: grdwiki
+  wiki_dbuser: grdwiki
+  wiki_sitename: GradientWiki
+  wiki_scriptpath: /mediawiki
+  wiki_articlepath: /wiki
+  wiki_required_forum_name: '<span class=\"grdmainforum\">Gradient</span>'
+  wiki_logo: http://gradient.electusmatari.com/media/img/gradient-logo.png
+  wiki_server: http://gradient.electusmatari.com
+  wiki_wikipassword: "{{grdwiki_password}}"
+- role: mediawiki
+  wiki_name: lutiwiki
+  wiki_dbname: lutiwiki
+  wiki_dbuser: lutiwiki
+  wiki_sitename: LutiWiki
+  wiki_scriptpath: /luti-mediawiki
+  wiki_articlepath: /lutiwiki
+  wiki_required_forum_name: "Lutinari Syndicate"
+  wiki_logo: http://www.electusmatari.com/media/img/emlogo.png
+  wiki_server: http://www.electusmatari.com
+  wiki_wikipassword: "{{lutiwiki_password}}"

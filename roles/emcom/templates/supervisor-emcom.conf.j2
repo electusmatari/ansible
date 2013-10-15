@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+[program:emcom-php]
+command = /usr/bin/spawn-fcgi -n -M 0777 -s /srv/emcom/sockets/php.socket -C 3 -u emcom -g emcom /usr/bin/php5-cgi
+
+[program:emcom-emapps]
+command=/srv/emcom/venv/bin/gunicorn -w 6 --max-requests 1 -u emcom -g emcom -b unix:/srv/emcom/sockets/emapps.socket emapps:emapps
+directory=/srv/emcom
+
+[program:emcom-emtools]
+environment=DJANGO_SETTINGS_MODULE="emtools.settings"
+command=/srv/emcom/venv/bin/gunicorn -w 6 -u emcom -g emcom -b unix:/srv/emcom/sockets/emtools.socket emtools.wsgi:application
+directory=/srv/emcom
+
+[program:emcom-gradient]
+environment=DJANGO_SETTINGS_MODULE="gradient.settings"
+command=/srv/emcom/venv/bin/gunicorn -w 3 -u emcom -g emcom -b unix:/srv/emcom/sockets/gradient.socket gradient.wsgi:application
+directory=/srv/emcom
+
+[program:emcom-mrintel]
+user=emcom
+command=/srv/emcom/venv/bin/python -m mrintel.main
+directory=/srv/emcom

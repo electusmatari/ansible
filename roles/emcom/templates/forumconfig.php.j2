@@ -1,0 +1,9 @@
+<?php
+// {{ ansible_managed }}
+$config['database']['type'] = 'mysql';
+$config['database']['database'] = 'emforum';
+$config['database']['table_prefix'] = 'mybb_';
+$config['database']['hostname'] = 'localhost';
+$config['database']['username'] = 'emforum';
+$config['database']['password'] = '{{emforum_password}}';
+?>

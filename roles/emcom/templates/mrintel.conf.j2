@@ -1,0 +1,70 @@
+# {{ ansible_managed }}
+[DEFAULT]
+port: 6667
+nick: MrIntel
+user: mrintel
+realname: MrIntel, the brother of MrRadar
+
+[log]
+logfile: /var/log/mrintel.log
+
+[network coldfront]
+server: irc.coldfront.net
+channels: #embot, #em-private, #grd
+
+[database]
+dbapi: psycopg2
+host: localhost
+user: emcom
+password: {{emcom_password}}
+database: emcom
+
+[feed 1]
+name: News
+url: http://www.eveonline.com/feed/rdfnews.asp?tid=1
+channels: #em-private
+
+[feed 2]
+name: Amarr
+url: http://www.eveonline.com/feed/rdfnews.asp?tid=2
+channels: #em-private
+
+[feed 3]
+name: Minmatar
+url: http://www.eveonline.com/feed/rdfnews.asp?tid=3
+channels: #em-private
+
+[feed 4]
+name: RPNews
+url: http://www.eveonline.com/feed/rdfnews.asp?tid=4
+channels: #em-private
+
+[feed 5]
+name: Gallente
+url: http://www.eveonline.com/feed/rdfnews.asp?tid=5
+channels: #em-private
+
+[feed 6]
+name: Devblog
+url: http://www.eveonline.com/feed/rdfdevblog.asp
+channels: #em-private
+
+[feed 7]
+name: Patchnotes
+url: http://www.eveonline.com/feed/rdfpatchnotes.asp
+channels: #em-private
+
+[feed 8]
+name: EM mentioned
+url: https://forums.eveonline.com/default.aspx?g=rsstopic&pg=search&search=Electus%%20Matari
+channels: #em-private
+
+[feed 9]
+name: FW
+url: http://evemaps.dotlan.net/feed/Factionwarfare/Conquered,Resecured
+channels: #em-private
+
+[feed 10]
+name: EM
+url: http://evemaps.dotlan.net/feed/Electus_Matari
+channels: #em-private

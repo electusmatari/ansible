@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+
+DATABASE_ENGINE = 'postgresql_psycopg2'
+DATABASE_NAME = 'emcom'
+DATABASE_USER = 'emcom'
+DATABASE_PASSWORD = '{{emcom_password}}'
+DATABASE_HOST = 'localhost'
+DATABASE_PORT = ''
+
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': DATABASE_NAME,
+    'USER': DATABASE_USER,
+    'PASSWORD': DATABASE_PASSWORD,
+    'HOST': DATABASE_HOST,
+    'PORT': DATABASE_PORT
+  }
+}
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = '{{ django_secret_key }}'
+
+MYSQL_PASSWD = '{{ emforum_password }}'

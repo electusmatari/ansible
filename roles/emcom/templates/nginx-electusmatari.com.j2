@@ -1,0 +1,166 @@
+# {{ ansible_managed }}
+
+server {
+  listen 80;
+  server_name electusmatari.com;
+  return 301 $scheme://www.electusmatari.com$request_uri;
+}
+
+server {
+  listen 80;
+  server_name www.electusmatari.com;
+  root /srv/emcom/electusmatari.com/web/www.electusmatari.com/;
+
+  access_log /var/log/nginx/www.electusmatari.com-access.log;
+  error_log /var/log/nginx/www.electusmatari.com-error.log;
+
+  # IGB headers use underscores for some reason
+  underscores_in_headers on;
+
+  # / goes to forums
+  rewrite ^/$ $scheme://www.electusmatari.com/forums/ permanent;
+
+  # Third-party (PHP) applications
+
+  location /forums/ {
+    alias /srv/emcom/emforums/Upload/;
+    index index.php;
+
+    location ~ ^/forums/(.*\.php)$ {
+      if (!-f /srv/emcom/emforums/Upload/$1) {
+        return 404;
+      }
+
+      include /etc/nginx/fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME /srv/emcom/emforums/Upload/$1;
+      fastcgi_index index.php;
+      fastcgi_pass unix:/srv/emcom/sockets/php.socket;
+    }
+  }
+
+  location /killboard/ {
+    alias /srv/emcom/emkillboard/;
+    index index.php;
+
+    location ~ ^/killboard/(.*\.php)$ {
+      if (!-f /srv/emcom/emkillboard/$1) {
+        return 404;
+      }
+
+      include /etc/nginx/fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME /srv/emcom/emkillboard/$1;
+      fastcgi_index index.php;
+      fastcgi_pass unix:/srv/emcom/sockets/php.socket;
+    }
+  }
+
+  location /wiki/ {
+    rewrite ^/wiki/(.*)$ /mediawiki/index.php?title=$1&$args;
+  }
+
+  location /mediawiki {
+    alias /srv/emcom/emwiki;
+    index index.php;
+
+    location ~ ^/mediawiki/(.*\.php)$ {
+      if (!-f /srv/emcom/emwiki/$1) {
+        return 404;
+      }
+
+      include /etc/nginx/fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME /srv/emcom/emwiki/$1;
+      fastcgi_index index.php;
+      fastcgi_pass unix:/srv/emcom/sockets/php.socket;
+    }
+  }
+
+  location ~ ^/lutiwiki/(.*) {
+    rewrite ^/lutiwiki/(.*)$ /luti-mediawiki/index.php?title=$1&$args;
+  }
+
+  location /luti-mediawiki {
+    alias /srv/emcom/lutiwiki;
+    index index.php;
+
+    location ~ ^/luti-mediawiki/(.*\.php)$ {
+      if (!-f /srv/emcom/lutiwiki/$1) {
+        return 404;
+      }
+
+      include /etc/nginx/fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME /srv/emcom/lutiwiki/$1;
+      fastcgi_index index.php;
+      fastcgi_pass unix:/srv/emcom/sockets/php.socket;
+    }
+  }
+
+  # First generation emcom applications
+
+  # location /vote {
+  #   oldemcom/cvote/vote.cgi
+  # }
+
+  # Second generation emcom applications
+
+  location ~ ^/(standings|forumtools) {
+    proxy_pass http://unix:/srv/emcom/sockets/emapps.socket;
+  }
+
+  # Third generation emcom applications
+
+  location / {
+    try_files $uri @emtools_proxy;
+  }
+
+  location @emtools_proxy {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+
+    proxy_pass http://unix:/srv/emcom/sockets/emtools.socket;
+  }
+}
+
+server {
+  listen 80;
+  server_name gradient.electusmatari.com;
+  root /srv/emcom/electusmatari.com/web/gradient.electusmatari.com/;
+
+  access_log /var/log/nginx/gradient.electusmatari.com-access.log;
+  error_log /var/log/nginx/gradient.electusmatari.com-error.log;
+
+  # IGB headers use underscores for some reason
+  underscores_in_headers on;
+
+  location /wiki/ {
+    rewrite ^/wiki/(.*)$ /mediawiki/index.php?title=$1&$args;
+  }
+
+  location /mediawiki {
+    alias /srv/emcom/grdwiki;
+    index index.php;
+
+    location ~ ^/mediawiki/(.*\.php)$ {
+      if (!-f /srv/emcom/grdwiki/$1) {
+        return 404;
+      }
+
+      include /etc/nginx/fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME /srv/emcom/grdwiki/$1;
+      fastcgi_index index.php;
+      fastcgi_pass unix:/srv/emcom/sockets/php.socket;
+    }
+  }
+
+  location / {
+    try_files $uri @gradient_proxy;
+  }
+
+  location @gradient_proxy {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+
+    proxy_pass http://unix:/srv/emcom/sockets/gradient.socket;
+  }
+}

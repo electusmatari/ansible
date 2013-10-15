@@ -1,0 +1,9 @@
+---
+- name: Install package supervisor (from backports)
+  apt: pkg=supervisor state=present update_cache=yes
+       default_release=squeeze-backports
+  tags: supervisor
+
+- name: Start and enable supervisor
+  service: name=supervisor state=running enabled=yes
+  tags: supervisor

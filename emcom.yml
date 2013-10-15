@@ -1,0 +1,9 @@
+---
+- hosts: server
+  sudo: yes
+  roles:
+    - passwords
+    - common
+    - emcom
+  vars:
+    - secrets_dir: ~/Projects/emcom/secrets/

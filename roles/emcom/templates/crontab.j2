@@ -1,0 +1,14 @@
+12 * * * * emcom php /srv/emcom/emkillboard/cron/cron_feed.php >/dev/null
+42 * * * * emcom php /srv/emcom/emkillboard/cron/cron_api.php >/dev/null
+23 3 * * * emcom php /srv/emcom/emkillboard/cron/cron_value.php >/dev/null
+23 4 * * * emcom php /srv/emcom/emkillboard/cron/cron_clearup.php >/dev/null
+
+PATH=/srv/emcom/venv/bin/
+
+30 4,16 * * * emcom django-admin.py apiauth --settings=emtools.settings
+*/10  * * * * emcom django-admin.py cleanapicache --settings=emtools.settings
+30 1 * * * emcom django-admin.py cleanup --settings=emtools.settings
+
+0 2,6,10,14,18,22 * * * emcom django-admin.py industryupdate --settings=gradient.settings
+0 12 * * * emcom django-admin.py updateindex --settings=gradient.settings
+0 1 * * * emcom django-admin.py cleanup --settings=gradient.settings

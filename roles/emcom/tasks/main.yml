@@ -1,0 +1,160 @@
+---
+- name: Install packages
+  apt: pkg={{item}} state=present update_cache=yes
+  with_items:
+    - mediawiki
+    - php5-cgi
+    - spawn-fcgi
+    - python-virtualenv
+    - postgresql
+    - libpq-dev
+    - libmysqlclient-dev
+    - python-psycopg2
+    - python-mysqldb
+  tags: emcom
+
+- name: Create emcom user
+  user: name=emcom
+        system=yes
+        home=/srv/emcom
+        state=present
+  tags: emcom
+
+- name: Adjust owner of home directory
+  file: path=/srv/emcom/
+        state=directory
+        mode=0755 owner=emcom group=emcom
+  tags: emcom
+
+- name: Create sockets directory
+  file: path=/srv/emcom/sockets
+        state=directory
+        mode=0755 owner=emcom group=emcom
+  tags: emcom
+
+- name: Create config directory
+  file: path=/etc/emcom
+        state=directory
+        mode=0700 owner=emcom group=emcom
+  tags: emcom
+
+- name: Create config files
+  template: src={{item}}.j2
+            dest=/etc/emcom/{{item}}
+            mode=0600 owner=emcom group=emcom
+  with_items:
+    - forumconfig.php
+    - kbconfig.php
+    - kgi.cfg
+    - mrintel.conf
+    - mybbauth.php
+    - old_access.py
+    - settings_local.py
+  tags: emcom
+
+- name: Create emcom virtualenv
+  command: sudo -u emcom virtualenv /srv/emcom/venv
+           creates=/srv/emcom/venv
+  tags: emcom
+
+- name: Create virtualenv pth file
+  template: src=emcom.pth.j2
+            dest=/srv/emcom/venv/lib/python2.6/site-packages/emcom.pth
+            mode=0644 owner=emcom group=emcom
+  tags: emcom
+
+- name: Create emcom nginx site
+  template: src=nginx-electusmatari.com.j2
+            dest=/etc/nginx/sites-available/electusmatari.com
+            mode=0644 owner=root group=root
+  notify:
+    - restart nginx
+  tags: emcom
+
+- name: Enable emcom nginx site
+  file: src=/etc/nginx/sites-available/electusmatari.com
+        dest=/etc/nginx/sites-enabled/electusmatari.com
+        state=link
+        owner=root group=root
+  notify:
+    - restart nginx
+  tags: emcom
+
+- name: Enable underscores in headers
+  lineinfile: dest=/etc/nginx/sites-available/default
+              regexp="underscores_in_headers"
+              line="        underscores_in_headers on;"
+              insertafter="^\tserver_name localhost;"
+              state=present
+  notify:
+    - restart nginx
+  tags: emcom
+
+- name: Enable nginx default site
+  file: src=/etc/nginx/sites-available/default
+        dest=/etc/nginx/sites-enabled/default
+        state=link
+        owner=root group=root
+  notify:
+    - restart nginx
+  tags: emcom
+
+- name: Create supervisor configuration
+  template: src=supervisor-emcom.conf.j2
+            dest=/etc/supervisor/conf.d/emcom.conf
+            mode=0644 owner=root group=root
+  notify:
+    - restart supervisor
+  tags: emcom
+
+- name: Create postgres user
+  sudo_user: postgres
+  postgresql_user: user=emcom
+                   password={{emcom_password}}
+                   state=present
+  tags: emcom
+
+- name: Create postgres database
+  sudo_user: postgres
+  postgresql_db: db=emcom
+                 owner=emcom
+                 state=present
+  tags: emcom
+
+- name: Create mysql databases
+  mysql_db: name={{item}}
+            state=present
+  with_items:
+    - emmisc
+    - emforum
+    - emkillboard
+    - emwiki
+    - grdwiki
+    - lutiwiki
+  tags: emcom
+
+- name: Create mysql user
+  mysql_user: name={{item.name}}
+              password={{item.password}}
+              state=present
+              priv={{item.name}}.*:ALL
+  with_items:
+    - name: emmisc
+      password: "{{emmisc_password}}"
+    - name: emforum
+      password: "{{emforum_password}}"
+    - name: emkillboard
+      password: "{{emkillboard_password}}"
+    - name: emwiki
+      password: "{{emwiki_password}}"
+    - name: grdwiki
+      password: "{{grdwiki_password}}"
+    - name: lutiwiki
+      password: "{{lutiwiki_password}}"
+  tags: emcom
+
+- name: Install crontab
+  template: src=crontab.j2
+            dest=/etc/cron.d/emcom
+            mode=0644 owner=root group=root
+  tags: emcom

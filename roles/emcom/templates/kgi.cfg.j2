@@ -1,0 +1,38 @@
+# {{ ansible_managed }}
+[templates]
+directory: /srv/emcom/electusmatari.com/lib/emapps/templates/
+
+[dbdjango]
+dbapi: psycopg2
+host: localhost
+user: emcom
+password: {{emcom_password}}
+database: emcom
+
+[dbforcer]
+dbapi: MySQLdb
+host: localhost
+user: emmisc
+passwd: {{emmisc_password}}
+db: emmisc
+
+[dbforums]
+dbapi: MySQLdb
+host: localhost
+user: emforum
+passwd: {{emforum_password}}
+db: emforum
+
+[dbkillboard]
+dbapi: MySQLdb
+host: localhost
+user: emkillboard
+passwd: {{emkillboard_password}}
+db: emkillboard
+
+[dbwiki]
+dbapi: MySQLdb
+host: localhost
+user: emwiki
+passwd: {{emwiki_password}}
+db: emwiki

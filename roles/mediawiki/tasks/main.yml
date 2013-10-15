@@ -1,0 +1,46 @@
+---
+- name: Create LocalSettings.php for {{wiki_name}}
+  template: src=LocalSettings.php.j2
+            dest=/etc/emcom/{{wiki_name}}LocalSettings.php
+            owner=emcom group=emcom
+
+- name: Create installtion directory for {{wiki_name}}
+  file: path=/srv/emcom/{{wiki_name}}
+        state=directory
+        owner=emcom group=emcom
+
+- name: Create images directory for {{wiki_name}}
+  file: path=/srv/emcom/{{wiki_name}}/images
+        state=directory
+        owner=emcom group=emcom
+
+- name: Link settings for {{wiki_name}}
+  file: src=/etc/emcom/{{wiki_name}}LocalSettings.php
+        dest=/srv/emcom/{{wiki_name}}/LocalSettings.php
+        state=link
+        owner=emcom group=emcom
+
+- name: Install mediawiki files for {{wiki_name}}
+  file: src=/usr/share/mediawiki/{{item}}
+        dest=/srv/emcom/{{wiki_name}}/{{item}}
+        state=link
+        owner=emcom group=emcom
+  with_items:
+    - api.php
+    - config
+    - extensions
+    - img_auth.php
+    - includes
+    - index.php
+    - install-utils.inc
+    - languages
+    - maintenance
+    - opensearch_desc.php
+    - profileinfo.php
+    - redirect.php
+    - redirect.phtml
+    - skins
+    - StartProfiler.php
+    - thumb.php
+    - trackback.php
+    - wiki.phtml
