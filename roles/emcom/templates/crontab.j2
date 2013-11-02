@@ -3,6 +3,8 @@
 23 3 * * * emcom php /srv/emcom/emkillboard/cron/cron_value.php >/dev/null
 23 4 * * * emcom php /srv/emcom/emkillboard/cron/cron_clearup.php >/dev/null
 
+*/5 * * * * emcom /srv/emcom/electusmatari.com/bin/check_industryupdate.sh
+
 PATH=/srv/emcom/venv/bin/
 
 30 4,16 * * * emcom django-admin.py apiauth --settings=emtools.settings
