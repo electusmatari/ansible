@@ -4,6 +4,7 @@
   with_items:
     - mediawiki
     - php5-cgi
+    - php5-gd
     - spawn-fcgi
     - python-virtualenv
     - postgresql
