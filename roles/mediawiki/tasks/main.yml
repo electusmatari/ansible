@@ -1,4 +1,7 @@
 ---
+- name: Install mediawiki
+  apt: pkg=mediawiki state=present
+
 - name: Create LocalSettings.php for {{wiki_name}}
   template: src=LocalSettings.php.j2
             dest=/etc/emcom/{{wiki_name}}LocalSettings.php
