@@ -121,6 +121,11 @@
                  state=present
   tags: emcom
 
+- name: Configure mysql
+  template: src=innodb_file_per_table.cnf.j2
+            dest=/etc/mysql/conf.d/innodb_file_per_table.cnf.j2
+            mode=0644 owner=root group=root
+
 - name: Create mysql databases
   mysql_db: name={{item}}
             state=present
