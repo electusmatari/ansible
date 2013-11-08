@@ -108,6 +108,30 @@
     - restart supervisor
   tags: emcom
 
+- name: Create PostgreSQL directory in /srv
+  file: path=/srv/postgresql
+        state=directory
+        mode=0755 owner=postgres group=postgres
+  tags: emcom
+
+- name: Create PostgreSQL directory in /srv
+  file: path=/srv/postgresql/8.4
+        state=directory
+        mode=0755 owner=postgres group=postgres
+  tags: emcom
+
+- name: Create PostgreSQL directory in /srv
+  file: path=/srv/postgresql/8.4/main
+        state=directory
+        mode=0700 owner=postgres group=postgres
+  tags: emcom
+
+- name: Move PostgreSQL database directory to /srv/postgresql
+  lineinfile: dest=/etc/postgresql/8.4/main/postgresql.conf
+              regexp=^data_directory
+              line="data_directory = '/srv/postgresql/8.4/main'"
+  tags: emcom
+
 - name: Create postgres user
   sudo_user: postgres
   postgresql_user: user=emcom
