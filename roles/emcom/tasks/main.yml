@@ -122,12 +122,32 @@
                  state=present
   tags: emcom
 
-- name: Configure mysql
-  template: src=innodb_file_per_table.cnf.j2
-            dest=/etc/mysql/conf.d/innodb_file_per_table.cnf.j2
-            mode=0644 owner=root group=root
+- name: Create MySQL directory in /srv
+  file: path=/srv/mysql
+        state=directory
+        mode=0700 owner=mysql group=mysql
+  tags: emcom
 
-- name: Create mysql databases
+# For some reason, this does not work. It still looks in /var/lib
+- name: Move MySQL database to /srv/mysql
+  template: src=data_dir_in_srv.cnf.j2
+            dest=/etc/mysql/conf.d/data_dir_in_srv.cnf
+            mode=0644 owner=root group=root
+  tags: emcom
+
+- name: Ensure MySQL database to /srv/mysql
+  lineinfile: dest=/etc/mysql/my.cnf
+              regexp=^datadir
+              line="datadir = /srv/mysql"
+  tags: emcom
+
+- name: Configure one innodb file per table
+  template: src=innodb_file_per_table.cnf.j2
+            dest=/etc/mysql/conf.d/innodb_file_per_table.cnf
+            mode=0644 owner=root group=root
+  tags: emcom
+
+- name: Create MySQL databases
   mysql_db: name={{item}}
             state=present
   with_items:
