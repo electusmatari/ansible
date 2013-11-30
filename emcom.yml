@@ -2,8 +2,15 @@
 - hosts: server
   sudo: yes
   roles:
-    - passwords
-    - common
     - emcom
   vars:
-    - secrets_dir: ~/Projects/emcom/secrets/
+    secrets_dir: ~/Projects/emcom/secrets/
+    edk_admin_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/edk/admin/password length=15') }}"
+    django_secret_key: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/django/secret_key length=50') }}"
+    emcom_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/db/emcom/password length=15') }}"
+    emmisc_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/db/emmisc/password length=15') }}"
+    emforum_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/db/emforum/password length=15') }}"
+    emkillboard_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/db/emkillboard/password length=15') }}"
+    emwiki_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/db/emwiki/password length=15') }}"
+    grdwiki_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/db/lutiwiki/password length=15') }}"
+    lutiwiki_password: "{{ lookup('password', secrets_dir + '/credentials/' + ansible_fqdn + '/db/lutiwiki/password length=15') }}"

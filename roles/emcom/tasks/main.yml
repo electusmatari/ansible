@@ -60,7 +60,7 @@
 
 - name: Create virtualenv pth file
   template: src=emcom.pth.j2
-            dest=/srv/emcom/venv/lib/python2.6/site-packages/emcom.pth
+            dest=/srv/emcom/venv/lib/python2.7/site-packages/emcom.pth
             mode=0644 owner=emcom group=emcom
   tags: emcom
 
@@ -115,21 +115,21 @@
   tags: emcom
 
 - name: Create PostgreSQL directory in /srv
-  file: path=/srv/postgresql/8.4
+  file: path=/srv/postgresql/9.1
         state=directory
         mode=0755 owner=postgres group=postgres
   tags: emcom
 
 - name: Create PostgreSQL directory in /srv
-  file: path=/srv/postgresql/8.4/main
+  file: path=/srv/postgresql/9.1/main
         state=directory
         mode=0700 owner=postgres group=postgres
   tags: emcom
 
 - name: Move PostgreSQL database directory to /srv/postgresql
-  lineinfile: dest=/etc/postgresql/8.4/main/postgresql.conf
+  lineinfile: dest=/etc/postgresql/9.1/main/postgresql.conf
               regexp=^data_directory
-              line="data_directory = '/srv/postgresql/8.4/main'"
+              line="data_directory = '/srv/postgresql/9.1/main'"
   tags: emcom
 
 - name: Create postgres user

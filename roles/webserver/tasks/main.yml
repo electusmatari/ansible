@@ -1,7 +1,6 @@
 ---
-- name: Install package nginx (from backports)
+- name: Install package nginx
   apt: pkg=nginx state=present update_cache=yes
-       default_release=squeeze-backports
   tags: nginx
 
 - name: Start and enable nginx

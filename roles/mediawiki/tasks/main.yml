@@ -2,6 +2,11 @@
 - name: Install mediawiki
   apt: pkg=mediawiki state=present
 
+- name: Create config directory
+  file: path=/etc/emcom
+        state=directory
+        mode=0700 owner=emcom group=emcom
+
 - name: Create LocalSettings.php for {{wiki_name}}
   template: src=LocalSettings.php.j2
             dest=/etc/emcom/{{wiki_name}}LocalSettings.php
@@ -35,15 +40,16 @@
     - img_auth.php
     - includes
     - index.php
-    - install-utils.inc
     - languages
+    - load.php
     - maintenance
+    - mw-config
     - opensearch_desc.php
     - profileinfo.php
     - redirect.php
     - redirect.phtml
+    - resources
     - skins
-    - StartProfiler.php
     - thumb.php
-    - trackback.php
+    - thumb_handler.php
     - wiki.phtml
