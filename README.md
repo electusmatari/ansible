@@ -26,3 +26,7 @@ Due to a bug in ansible
 (https://github.com/ansible/ansible/issues/4441), the first run will
 fail due to an existing home directory. Further runs will then work
 fine.
+
+After pushing the other packages into the create git repositories, a
+/srv/emcom/bin/pip -r /srv/emcom/electusmatari.com/requirements.txt
+should install all dependencies.
