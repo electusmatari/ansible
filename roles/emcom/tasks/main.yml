@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  apt: pkg={{item}} state=present update_cache=yes
+  apt: pkg={{item}} state=present
   with_items:
     - mediawiki
     - php5-cgi
@@ -202,6 +202,14 @@
     - name: lutiwiki
       password: "{{lutiwiki_password}}"
   tags: emcom
+
+# This is a hack because electusmatari.com/lib/emtools/utils.py
+# only supports a single user. Bad.
+- name: Create legacy mysql user
+  mysql_user: name=emcom
+              password={{emforum_password}}
+              state=present
+              priv=emforum.*:ALL
 
 - name: Install crontab
   template: src=crontab.j2

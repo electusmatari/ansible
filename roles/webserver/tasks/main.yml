@@ -1,6 +1,6 @@
 ---
 - name: Install package nginx
-  apt: pkg=nginx state=present update_cache=yes
+  apt: pkg=nginx state=present
   tags: nginx
 
 - name: Start and enable nginx

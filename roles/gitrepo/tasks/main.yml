@@ -1,6 +1,6 @@
 ---
 - name: Install git package
-  apt: pkg=git state=present update_cache=yes
+  apt: pkg=git state=present
 
 - name: Create user {{gituser}}
   user: name={{gituser}} system=yes

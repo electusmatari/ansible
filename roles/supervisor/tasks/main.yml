@@ -1,6 +1,6 @@
 ---
 - name: Install package supervisor
-  apt: pkg=supervisor state=present update_cache=yes
+  apt: pkg=supervisor state=present
   tags: supervisor
 
 - name: Start and enable supervisor

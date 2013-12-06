@@ -1,6 +1,14 @@
 # {{ ansible_managed }}
 
 server {
+  listen 80 default_server;
+  server_name _;
+  # This needs to be set in the default server.
+  underscores_in_headers on;
+  return 444;
+}
+
+server {
   listen 80;
   server_name electusmatari.com;
   return 301 $scheme://www.electusmatari.com$request_uri;
