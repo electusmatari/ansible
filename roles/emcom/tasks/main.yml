@@ -209,7 +209,7 @@
   mysql_user: name=emcom
               password={{emforum_password}}
               state=present
-              priv=emforum.*:ALL
+              priv="emforum.*:ALL/emkillboard.*:ALL"
 
 - name: Install crontab
   template: src=crontab.j2
