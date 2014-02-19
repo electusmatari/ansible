@@ -110,7 +110,7 @@ server {
 
   # Second generation emcom applications
 
-  location ~ ^/(standings|forumtools) {
+  location ~ ^/(standings|grdstandings|forumtools) {
     proxy_pass http://unix:/srv/emcom/sockets/emapps.socket;
   }
 
