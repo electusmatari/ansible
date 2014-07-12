@@ -15,18 +15,17 @@ The `-K` will ask for a sudo password.
 # Provisioning the Server
 
 ```
-apt-get install python-apt git python-jinja2 python-pyyaml
+apt-get install python-apt git python-jinja2 python-yaml python-dev
 git clone https://github.com/ansible/ansible.git
 . ansible/hacking/env-setup
 ```
 
 After that, the `ansible-playbook` command above should work.
 
-Due to a bug in ansible
-(https://github.com/ansible/ansible/issues/4441), the first run will
-fail due to an existing home directory. Further runs will then work
-fine.
+On recent Ubuntu you will need to install mysql-server and mysql-client
+manually beforehand, with no root password, otherwise it ends up with an
+unusable password.
 
-After pushing the other packages into the create git repositories, a
-/srv/emcom/bin/pip -r /srv/emcom/electusmatari.com/requirements.txt
+After pushing the other packages into the correct git repositories, a
+/srv/emcom/venv/bin/pip install -r /srv/emcom/electusmatari.com/requirements.txt
 should install all dependencies.
